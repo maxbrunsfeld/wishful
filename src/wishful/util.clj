@@ -1,15 +1,26 @@
 (ns wishful.util)
 
-(declare group-by-fn-name transform-each-rhs remove-fn-name-from-forms)
+(declare group-by-fn-name transform-each-rhs remove-fn-name-from-forms value-for-args invalid-arguments!)
 
 (defn make-stub
   [arglists-with-values]
-  (fn [& args]
-    (->>
-      arglists-with-values
-      (filter #(= (first %) args))
-      first
-      second)))
+  (let [prioritized-arglists-with-values (reverse arglists-with-values)]
+    (fn [& args]
+      (or
+        (value-for-args args prioritized-arglists-with-values)
+        (invalid-arguments! args)))))
+
+(defn- value-for-args [actual-args arglists-with-values]
+  (->>
+    arglists-with-values
+    (filter #(= (first %) actual-args))
+    first
+    second))
+
+(defn- invalid-arguments! [args]
+  (throw
+    (IllegalArgumentException.
+      (str "No stub provided for arguments: " (apply str args)))))
 
 (defn stub-bindings->redefs
   [stub-bindings]
