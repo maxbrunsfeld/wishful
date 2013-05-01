@@ -1,5 +1,6 @@
 (ns wishful.core
-  (:require [wishful.util :as util]))
+  (:require [wishful.redefs :as redefs]
+            [wishful.stubs :as stubs]))
 
 (defn make-stub
   "Returns a function that maps the given argument lists
@@ -9,7 +10,7 @@
   [[arg3] value2]"
 
   [& argument-bindings]
-  (apply util/make-stub argument-bindings))
+  (apply stubs/make-stub argument-bindings))
 
 (defmacro with-stubs
   "Temporarily redefines functions while executing the body.
@@ -21,5 +22,5 @@
 
   [fn-bindings & body]
   `(with-redefs
-     ~(util/stub-bindings->redefs fn-bindings)
+     ~(redefs/stub-bindings->redefs fn-bindings)
      ~(cons 'do body)))
