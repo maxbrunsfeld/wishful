@@ -12,6 +12,8 @@
   [& argument-bindings]
   (apply stubs/make-stub argument-bindings))
 
+(def calls stubs/calls)
+
 (defmacro with-stubs
   "Temporarily redefines functions while executing the body.
   The temporary function definitions are specified with a function

@@ -8,21 +8,28 @@
 (deftest test-with-stub
   (testing "it redefines a function according to an argument list"
     (with-stubs
-      [(f1 1 2) :stub1]
-      (is (= :stub1 (f1 1 2)))))
+      [(f1 1 2) :value1]
+      (is (= :value1 (f1 1 2)))))
 
   (testing "it restores the vars' original values afterwards"
     (with-stubs
-      [(f1 1 2) :stub1])
+      [(f1 1 2) :value1])
     (is (= 3 (f1 1 2))))
 
   (testing "it can redefine multiple functions, with multiple argument lists"
     (with-stubs
-      [(f1 1 (inc 1)) :stub1
-       (f1 2 4) :stub2
-       (f2 1 2) :stub3]
+      [(f1 1 (inc 1)) :value1
+       (f1 2 4) :value2
+       (f2 1 2) :value3]
 
-      (is (= :stub1 (f1 1 2)))
-      (is (= :stub2 (f1 2 4)))
-      (is (= :stub3 (f2 1 2)))))
-  )
+      (is (= :value1 (f1 1 2)))
+      (is (= :value2 (f1 2 4)))
+      (is (= :value3 (f2 1 2)))))
+
+  (testing "it keeps track of functions' call counts"
+    (with-stubs
+      [(f1 1 2) :value1
+       (f1 2 3) :value2]
+      (f1 1 2)
+      (f1 2 3)
+      (is (= 2 (-> f1 calls count))))))

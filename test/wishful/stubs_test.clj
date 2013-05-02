@@ -24,4 +24,20 @@
       (let
         [stub (make-stub [[[:arg] :first-value]
                           [[:arg] :later-value]])]
-        (is (= :later-value (stub :arg)))))))
+        (is (= :later-value (stub :arg))))))
+
+  (testing "it keeps track of its calls"
+    (let
+      [stub (make-stub [[[:arg1] :value1]
+                        [[:arg2] :value2]])]
+      (do
+        (stub :arg1)
+        (stub :arg2)
+
+        (is (= 2 (-> stub calls count)))
+        (is (= [:arg1] (-> stub calls first :args)))
+        (is (= [:arg2] (-> stub calls second :args)))
+
+        (reset-stub stub)
+
+        (is (= 0 (-> stub calls count)))))))
