@@ -16,10 +16,10 @@
 
     (testing "it maps each fn to a collection of its arglists and their values"
       (is (= '(wishful.stubs/make-stub
-                [[[:arg1 :arg2] :value1]
-                 [[:arg5 :arg6] :value3]])
+                [[:arg1 :arg2] :value1]
+                [[:arg5 :arg6] :value3])
              (get redefs-map 'f1)))
 
-      (is (= '(wishful.stubs/make-stub [[[:arg3 :arg4] :value2]])
+      (is (= '(wishful.stubs/make-stub [[:arg3 :arg4] :value2])
              (get redefs-map 'f2))))))
 

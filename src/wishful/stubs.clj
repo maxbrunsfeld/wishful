@@ -3,7 +3,7 @@
 (declare value-for-args invalid-arguments! record-calls compute-stub-value calls*)
 
 (defn make-stub
-  [arglists-with-values]
+  [& arglists-with-values]
   (let [arglists-with-values (reverse arglists-with-values)
         calls (atom [])]
     (with-meta

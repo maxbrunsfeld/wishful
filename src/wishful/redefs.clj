@@ -12,7 +12,7 @@
       #(->> %
             remove-fn-name-from-forms
             vec
-            (list 'wishful.stubs/make-stub)))))
+            (apply list 'wishful.stubs/make-stub)))))
 
 (defn- group-by-fn-name
   [bindings]
