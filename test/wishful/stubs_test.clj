@@ -48,6 +48,6 @@
         (is (= [:arg1] (-> stub calls first :args)))
         (is (= [:arg2] (-> stub calls second :args)))
 
-        (reset-stub stub)
+        (reset-calls! stub)
 
         (is (= 0 (-> stub calls count)))))))

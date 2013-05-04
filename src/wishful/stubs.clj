@@ -18,7 +18,7 @@
   [stub-fn]
   @(calls* stub-fn))
 
-(defn reset-stub
+(defn reset-calls!
   [stub-fn]
   (swap! (calls* stub-fn) (constantly [])))
 
