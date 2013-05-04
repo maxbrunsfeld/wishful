@@ -1,6 +1,7 @@
 (ns wishful.core
   (:require [wishful.redefs :as redefs]
-            [wishful.stubs :as stubs]))
+            [wishful.stubs :as stubs]
+            [wishful.matchers :as match]))
 
 (defn make-stub
   "Returns a function that maps the given argument lists
@@ -26,3 +27,10 @@
   `(with-redefs
      ~(redefs/stub-bindings->redefs fn-bindings)
      ~(cons 'do body)))
+
+(defn any-arg
+  "Creates a matcher which can be used to constrain arguments to stubs"
+  ([] (any-arg constantly true))
+  ([matcher-fn & args]
+   (apply match/any-arg (cons matcher-fn args))))
+

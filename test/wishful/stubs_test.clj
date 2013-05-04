@@ -1,6 +1,7 @@
 (ns wishful.stubs-test
   (:use clojure.test
-        wishful.stubs))
+        wishful.stubs
+        wishful.matchers))
 
 (deftest test-make-stub
   (testing "when called with args that match an arglist from a stub"
@@ -25,6 +26,15 @@
         [stub (make-stub [[:arg] :first-value]
                          [[:arg] :later-value])]
         (is (= :later-value (stub :arg))))))
+
+  (testing "it handles wildcard parameters"
+    (let
+      [stub (make-stub [[(any-arg even?) :arg2] :other]
+                       [[:arg1 (any-arg < 5)] :smaller]
+                       [[:arg1 (any-arg > 5)] :greater])]
+      (is (= :other (stub 2 :arg2)))
+      (is (= :smaller (stub :arg1 3)))
+      (is (= :greater (stub :arg1 6)))))
 
   (testing "it keeps track of its calls"
     (let

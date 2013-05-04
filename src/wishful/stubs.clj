@@ -1,6 +1,7 @@
-(ns wishful.stubs)
+(ns wishful.stubs
+  (:require [wishful.matchers :as match]))
 
-(declare value-for-args invalid-arguments! record-calls compute-stub-value calls*)
+(declare value-for-args invalid-arguments! record-calls compute-stub-value calls* arglist-matches?)
 
 (defn make-stub
   [& arglists-with-values]
@@ -33,9 +34,14 @@
 (defn- value-for-args [actual-args arglists-with-values]
   (->>
     arglists-with-values
-    (filter #(= (first %) actual-args))
+    (filter #(arglist-matches? (first %) actual-args))
     first
     second))
+
+(defn- arglist-matches? [expected-arglist actual-arglist]
+  (every?
+    identity
+    (map #(match/arg-matches? %1 %2) expected-arglist actual-arglist)))
 
 (defn- invalid-arguments! [args]
   (throw
