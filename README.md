@@ -1,7 +1,7 @@
 Wishful
 =======
 
-Wishful is a a small clojure library for stubbing, spying, and top-down TDD.
+Wishful is a small clojure library for stubbing, spying, and top-down TDD.
 
 Contents:
   - [Installation](#installation)
