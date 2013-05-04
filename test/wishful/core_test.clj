@@ -42,4 +42,6 @@
        (f1 2 3) :value2]
       (f1 1 2)
       (f1 2 3)
-      (is (= 2 (-> f1 calls count))))))
+      (is (= 2 (-> f1 calls count)))
+      (reset-calls! f1)
+      (is (= 0 (-> f1 calls count))))))
