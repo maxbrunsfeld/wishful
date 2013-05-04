@@ -3,6 +3,12 @@ Wishful
 
 Wishful is a a small clojure library for stubbing, spying, and top-down TDD.
 
+Contents:
+  - [Installation](#installation)
+  - [Stubbing](#stubbing)
+  - [Argument Matchers](#argument-matchers)
+  - [Checking Calls](#checking-calls)
+
 ## Installation
 
 Add wishful to your project's dependencies:
@@ -64,6 +70,21 @@ You can pass `any-arg` a predicate function and arguments.
   (is (= :value1 (some-fn 3)))
   (is (= :value2 (some-fn 4)))
   (is (= :value3 (some-fn 11))))
+```
+
+## Checking Calls
+
+Stub functions record the arguments with which they're called.
+
+```clojure
+(with-stubs
+  [(some-fn (any-arg)) :value]
+
+  (some-fn 1 2)
+  (some-fn 3 4)
+  
+  (is (= (calls some-fn)
+         [{:args [1 2]} {:args [3 4]}])))
 ```
 
 ## License
