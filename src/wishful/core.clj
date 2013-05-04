@@ -30,7 +30,7 @@
 
 (defn any-arg
   "Creates a matcher which can be used to constrain arguments to stubs"
-  ([] (any-arg constantly true))
+  ([] (any-arg (constantly true)))
   ([matcher-fn & args]
    (apply match/any-arg (cons matcher-fn args))))
 

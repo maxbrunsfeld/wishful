@@ -26,6 +26,16 @@
       (is (= :value2 (f1 2 4)))
       (is (= :value3 (f2 1 2)))))
 
+  (testing "it can deal with wildcard parameters"
+    (with-stubs
+      [(f1 1 (any-arg)) :value1
+       (f1 1 (any-arg even?)) :value2
+       (f1 1 (any-arg > 10)) :value3]
+
+      (is (= :value1 (f1 1 1)))
+      (is (= :value2 (f1 1 2)))
+      (is (= :value3 (f1 1 12)))))
+
   (testing "it keeps track of functions' call counts"
     (with-stubs
       [(f1 1 2) :value1
