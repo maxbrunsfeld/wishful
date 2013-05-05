@@ -1,32 +1,34 @@
-(ns wishful.stubs
+(ns wishful.spy
   (:require [wishful.matchers :as match]))
 
-(declare value-for-args invalid-arguments! record-calls compute-stub-value calls* arglist-matches?)
+(declare value-for-args invalid-arguments! record-call
+         compute-spy-value calls* arglist-matches?)
 
-(defn make-stub
+(defn make-spy
   [& arglists-with-values]
   (let [arglists-with-values (reverse arglists-with-values)
         calls (atom [])]
     (with-meta
       (fn [& args]
-        (record-calls
+        (record-call
           calls args
-          #(compute-stub-value arglists-with-values args)))
+          #(compute-spy-value arglists-with-values args)))
       {::calls calls})))
 
 (defn calls
-  [stub-fn]
-  @(calls* stub-fn))
+  [spy-fn]
+  @(calls* spy-fn))
 
 (defn reset-calls!
-  [stub-fn]
-  (swap! (calls* stub-fn) (constantly [])))
+  [spy-fn]
+  (swap! (calls* spy-fn) (constantly [])))
 
-(defn- record-calls [calls args fn]
-  (swap! calls conj {:args args})
-  (fn))
+(defn- record-call [calls args fn]
+  (let [return (fn)]
+    (swap! calls conj {:args args :return return})
+    return))
 
-(defn- compute-stub-value [arglists-with-values args]
+(defn- compute-spy-value [arglists-with-values args]
   (or
     (value-for-args args arglists-with-values)
     (invalid-arguments! args)))
@@ -46,6 +48,6 @@
 (defn- invalid-arguments! [args]
   (throw
     (IllegalArgumentException.
-      (str "No stub provided for arguments: " (apply str args)))))
+      (str "No spy provided for arguments: " (apply str args)))))
 
-(defn- calls* [stub-fn] (-> stub-fn meta ::calls))
+(defn- calls* [spy-fn] (-> spy-fn meta ::calls))

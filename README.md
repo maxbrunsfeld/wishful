@@ -1,11 +1,11 @@
 Wishful
 =======
 
-Wishful is a small clojure library for stubbing, spying, and top-down TDD.
+Simple test spies for clojure.
 
 Contents:
   - [Installation](#installation)
-  - [Stubbing](#stubbing)
+  - [Using Spies](#using-spies)
   - [Argument Matchers](#argument-matchers)
   - [Checking Calls](#checking-calls)
 
@@ -17,34 +17,35 @@ Add wishful to your project's dependencies:
   [wishful "0.1.1"]
 ```
 
-## Stubbing
+## Using Spies
 
-The `with-stubs` macro temporarily redefines functions.
+The `with-spies` macro temporarily redefines functions.
 
 ```clojure
 (use 'wishful.core)
 
-(with-stubs
+(with-spies
   [(some-fn :arg1) :value1
    (other-fn :arg2 :arg3) :value2]
-   
+
   (is (= :value1 (some-fn :arg1)))
   (is (= :value3 (other-fn :arg2 :arg3)))))
 ```
 
-A function can be stubbed to return different values for different arguments.
+A function can be set to return different values for different arguments.
 
 ```clojure
-(with-stubs
+(with-spies
   [(some-fn :arg1) :value1
    (some-fn :arg2) :value2]
   (is (= :value2 (some-fn :arg2))))
 ```
 
-Later stubs take precedence over earlier ones.
+Later values take precedence over earlier ones, in cases where both
+argument lists match.
 
 ```clojure
-(with-stubs
+(with-spies
   [(some-fn :arg1) :value1
    (some-fn :arg1) :value2]
   (is (= :value2 (some-fn :arg1))))
@@ -55,7 +56,7 @@ Later stubs take precedence over earlier ones.
 You can specify arguments more loosely using the `any-arg` function.
 
 ```clojure
-(with-stubs
+(with-spies
   [(some-fn (any-arg)) :value1]
   (is (= :value1 (some-fn "anything at all"))))
 ```
@@ -63,7 +64,7 @@ You can specify arguments more loosely using the `any-arg` function.
 You can pass `any-arg` a predicate function and arguments.
 
 ```clojure
-(with-stubs
+(with-spies
   [(some-fn (any-arg)) :value1
    (some-fn (any-arg even?)) :value2
    (some-fn (any-arg > 10)) :value3]
@@ -74,17 +75,18 @@ You can pass `any-arg` a predicate function and arguments.
 
 ## Checking Calls
 
-Stub functions record the arguments with which they're called.
+Spy functions record the arguments with which they're called.
 
 ```clojure
-(with-stubs
+(with-spies
   [(some-fn (any-arg)) :value]
 
   (some-fn 1 2)
   (some-fn 3 4)
-  
+
   (is (= (calls some-fn)
-         [{:args [1 2]} {:args [3 4]}])))
+         [{:args [1 2] :return :value}
+          {:args [3 4] :return :value}])))
 ```
 
 ## License

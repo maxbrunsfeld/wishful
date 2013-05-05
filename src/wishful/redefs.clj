@@ -1,18 +1,18 @@
 (ns wishful.redefs
-  (:require [wishful.stubs]))
+  (:require [wishful.spy]))
 
 (declare group-by-fn-name transform-each-rhs remove-fn-name-from-forms)
 
-(defn stub-bindings->redefs
-  [stub-bindings]
+(defn spy-bindings->redefs
+  [spy-bindings]
   (->>
-    stub-bindings
+    spy-bindings
     group-by-fn-name
     (transform-each-rhs
       #(->> %
             remove-fn-name-from-forms
             vec
-            (apply list 'wishful.stubs/make-stub)))))
+            (apply list 'wishful.spy/make-spy)))))
 
 (defn- group-by-fn-name
   [bindings]
