@@ -14,7 +14,7 @@ Contents:
 Add wishful to your project's dependencies:
 
 ```clojure
-  [wishful "0.1.0-SNAPSHOT"]
+  [wishful "0.1.1"]
 ```
 
 ## Stubbing
