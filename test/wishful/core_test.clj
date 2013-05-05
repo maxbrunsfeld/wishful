@@ -1,14 +1,12 @@
 (ns wishful.core-test
   (:use clojure.test
-        wishful.core))
-
-(def f1 +)
-(def f2 *)
+        wishful.core
+        fixtures.functions))
 
 (deftest test-with-stub
   (testing "it redefines a function according to an argument list"
     (with-stubs
-      [(f1 1 2) :value1]
+      [(fixtures.functions/f1 1 2) :value1]
       (is (= :value1 (f1 1 2)))))
 
   (testing "it restores the vars' original values afterwards"
