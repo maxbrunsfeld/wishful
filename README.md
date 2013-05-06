@@ -91,6 +91,6 @@ Spy functions record the arguments with which they're called.
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright © 2013 Max Brunsfeld
 
 Distributed under the Eclipse Public License, the same as Clojure.
