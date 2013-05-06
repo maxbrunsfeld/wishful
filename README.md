@@ -1,6 +1,8 @@
 Wishful
 =======
 
+[![Build Status](https://travis-ci.org/maxbrunsfeld/wishful.png)](https://travis-ci.org/maxbrunsfeld/wishful)
+
 Simple test spies for clojure.
 
 Contents:
