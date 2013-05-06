@@ -2,17 +2,18 @@
   (:require [wishful.matchers :as match]))
 
 (declare value-for-args invalid-arguments! record-call
-         compute-spy-value calls* arglist-matches?)
+         compute-spy-value calls* arglist-matches?
+         spy-spec-matches? spy-spec-value)
 
 (defn make-spy
-  [& arglists-with-values]
-  (let [arglists-with-values (reverse arglists-with-values)
+  [& spy-specs]
+  (let [spy-specs (reverse spy-specs)
         calls (atom [])]
     (with-meta
       (fn [& args]
         (record-call
           calls args
-          #(compute-spy-value arglists-with-values args)))
+          #(compute-spy-value spy-specs args)))
       {::calls calls})))
 
 (defn calls
@@ -28,22 +29,30 @@
     (swap! calls conj {:args args :return return})
     return))
 
-(defn- compute-spy-value [arglists-with-values args]
+(defn- compute-spy-value [spy-specs args]
   (or
-    (value-for-args args arglists-with-values)
+    (value-for-args args spy-specs)
     (invalid-arguments! args)))
 
-(defn- value-for-args [actual-args arglists-with-values]
+(defn- value-for-args [actual-args spy-specs]
   (->>
-    arglists-with-values
-    (filter #(arglist-matches? (first %) actual-args))
+    spy-specs
+    (filter #(spy-spec-matches? actual-args %))
     first
-    second))
+    (spy-spec-value actual-args)))
 
-(defn- arglist-matches? [expected-arglist actual-arglist]
-  (every?
-    identity
-    (map #(match/arg-matches? %1 %2) expected-arglist actual-arglist)))
+(defn- spy-spec-matches? [args spy-spec]
+  (if (fn? spy-spec)
+    true
+    (every?
+      identity
+      (map #(match/arg-matches? %1 %2) (first spy-spec) args))))
+
+(defn- spy-spec-value
+  [actual-args spy-spec]
+  (if (fn? spy-spec)
+    (apply spy-spec actual-args)
+    (second spy-spec)))
 
 (defn- invalid-arguments! [args]
   (throw

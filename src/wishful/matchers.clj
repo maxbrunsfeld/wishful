@@ -1,8 +1,9 @@
 (ns wishful.matchers)
 
 (defn any-arg
-  [f & args]
-   {::is-matcher? true :function f :args args})
+  ([] (any-arg (constantly true)))
+  ([f & args]
+   {::is-matcher? true :function f :args args}))
 
 (defmulti arg-matches?
   (fn [expected actual]

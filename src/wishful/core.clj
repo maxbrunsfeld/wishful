@@ -23,9 +23,8 @@
   (any-arg)
   (any-arg even?)
   (any-arg contains? :some-key)"
-  ([] (any-arg (constantly true)))
-  ([matcher-fn & args]
-   (apply match/any-arg (cons matcher-fn args))))
+  [& args]
+  (apply match/any-arg args))
 
 (defn make-spy
   "Returns a function that maps the given argument lists
