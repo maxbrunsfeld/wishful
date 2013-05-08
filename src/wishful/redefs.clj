@@ -1,8 +1,7 @@
 (ns wishful.redefs
   (:require [wishful.spy]))
 
-(declare group-by-fn-name transform-each-rhs remove-fn-name-from-forms
-         qualify-name)
+(declare group-by-fn-name transform-each-rhs remove-fn-name-from-forms)
 
 (defn spy-bindings->redefs
   [spy-bindings]
@@ -20,11 +19,7 @@
   (->>
     bindings
     (partition 2)
-    (group-by #(->> % first first qualify-name))))
-
-(defn qualify-name
-  [sym]
-  (symbol (str (-> sym resolve meta :ns ns-name) "/" (name sym))))
+    (group-by (comp first first))))
 
 (defn- transform-each-rhs
   [f coll]

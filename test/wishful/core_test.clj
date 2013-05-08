@@ -6,7 +6,7 @@
 (deftest test-with-spy
   (testing "it redefines a function according to an argument list"
     (with-spies
-      [(f1 1 2) :value1]
+      [(fixtures.functions/f1 1 2) :value1]
       (is (= :value1 (f1 1 2)))))
 
   (testing "it restores the vars' original values afterwards"
@@ -23,14 +23,6 @@
       (is (= :value1 (f1 1 2)))
       (is (= :value2 (f1 2 4)))
       (is (= :value3 (f2 1 2)))))
-
-  (testing "it handles combinations of qualified and unqualifed function names"
-    (with-spies
-      [(f1 1 (inc 1)) :value1
-       (fixtures.functions/f1 2 4) :value2 ]
-
-      (is (= :value1 (f1 1 2)))
-      (is (= :value2 (f1 2 4))))
 
   (testing "it can deal with wildcard parameters"
     (with-spies
