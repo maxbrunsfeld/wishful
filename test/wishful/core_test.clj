@@ -30,7 +30,7 @@
        (fixtures.functions/f1 2 4) :value2 ]
 
       (is (= :value1 (f1 1 2)))
-      (is (= :value2 (f1 2 4))))
+      (is (= :value2 (f1 2 4)))))
 
   (testing "it can deal with wildcard parameters"
     (with-spies
