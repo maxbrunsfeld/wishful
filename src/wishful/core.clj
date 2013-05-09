@@ -10,8 +10,10 @@
 
   [(fn1 arg1 arg2) value1
    (fn2 arg3) value2]"
-  [spy-bindings & body]
-  `(with-redefs ~(redefs/spy-bindings->redefs spy-bindings) ~body))
+  [fn-bindings & body]
+  `(with-redefs
+     ~(redefs/spy-bindings->redefs fn-bindings)
+     ~(cons 'do body)))
 
 (defn any-arg
   "Creates a matcher which can be used to constrain arguments to spies.
