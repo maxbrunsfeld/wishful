@@ -1,5 +1,4 @@
-(ns wishful.spy
-  (:require [wishful.matchers :as match]))
+(ns wishful.spy)
 
 (declare invalid-arguments! record-call compute-spy-value
          apply-spy-spec arglist-matches?)
@@ -21,6 +20,11 @@
   [spy-fn]
   (swap! (-> spy-fn meta ::calls) (constantly [])))
 
+(defn any-arg
+  ([] (any-arg (constantly true)))
+  ([f & args]
+   {::matcher? true :function f :args args}))
+
 (defn- record-call [calls args fn]
   (let [return (fn)]
     (swap! calls conj {:args args :return return})
@@ -35,7 +39,7 @@
         :value)
       (invalid-arguments! args)))
 
-(defn apply-spy-spec
+(defn- apply-spy-spec
   [spy-spec args]
   (if (fn? spy-spec)
     {:matches? true
@@ -43,8 +47,14 @@
     {:matches? (arglist-matches? (first spy-spec) args)
      :value (second spy-spec)}))
 
+(defn- arg-matches?
+  [expected actual]
+  (if (::matcher? expected)
+    (apply (:function expected) (cons actual (:args expected)))
+    (= expected actual)))
+
 (defn- arglist-matches? [arglist actual-args]
-  (every? identity (map match/arg-matches? arglist actual-args)))
+  (every? identity (map arg-matches? arglist actual-args)))
 
 (defn- invalid-arguments! [args]
   (throw

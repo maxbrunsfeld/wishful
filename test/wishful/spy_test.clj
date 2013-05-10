@@ -1,7 +1,6 @@
 (ns wishful.spy-test
   (:use clojure.test
-        wishful.spy
-        wishful.matchers))
+        wishful.core))
 
 (deftest test-make-spy
 

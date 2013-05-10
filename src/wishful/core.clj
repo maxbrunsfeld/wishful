@@ -1,7 +1,6 @@
 (ns wishful.core
   (:require [wishful.redefs :as redefs]
-            [wishful.spy :as spy]
-            [wishful.matchers :as match]))
+            [wishful.spy :as spy]))
 
 (defmacro with-spies
   "Temporarily redefines functions while executing the body.
@@ -24,7 +23,7 @@
   (any-arg even?)
   (any-arg contains? :some-key)"
   [& args]
-  (apply match/any-arg args))
+  (apply spy/any-arg args))
 
 (defn make-spy
   "Returns a function that maps the given argument lists
