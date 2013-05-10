@@ -24,6 +24,15 @@
       (is (= :value2 (f1 2 4)))
       (is (= :value3 (f2 1 2)))))
 
+  (testing "it can use functions together with arg lists and values"
+    (with-spies
+      [f1 inc
+       (f2 2) :value2
+       (f1 1) :value3]
+
+      (is (= :value3 (f1 1)))
+      (is (= 100 (f1 99)))))
+
   (testing "it can deal with wildcard parameters"
     (with-spies
       [(f1 1 (any-arg)) :value1

@@ -1,3 +1,5 @@
+(in-ns 'wishful.core)
+
 (declare invalid-arguments! record-call compute-spy-value
          apply-spy-spec arglist-matches?)
 

@@ -1,5 +1,7 @@
+(in-ns 'wishful.core)
+
 (declare spy-bindings->redefs group-by-fn-name transform-each-rhs
-         remove-fn-name-from-forms)
+         remove-fn-name-from-forms get-spy-binding-fn)
 
 (defmacro with-spies
   "Temporarily redefines functions while executing the body.
@@ -29,7 +31,13 @@
   (->>
     bindings
     (partition 2)
-    (group-by (comp first first))))
+    (group-by (comp get-spy-binding-fn first))))
+
+(defn- get-spy-binding-fn
+  [spy-binding]
+  (if (seq? spy-binding)
+    (first spy-binding)
+    spy-binding))
 
 (defn- transform-each-rhs
   [f coll]
@@ -40,5 +48,8 @@
 (defn- remove-fn-name-from-forms
   [bindings]
   (map
-    (fn [[form val]] [(vec (rest form)) val])
+    (fn [[form val]]
+      (if (list? form)
+        [(vec (rest form)) val]
+        val))
     bindings))
