@@ -10,6 +10,7 @@ Contents:
   - [Using Spies](#using-spies)
   - [Argument Matchers](#argument-matchers)
   - [Checking Calls](#checking-calls)
+  - [Using with Speclj](#using-with-speclj)
 
 ## Installation
 
@@ -89,6 +90,32 @@ Spy functions record the arguments with which they're called.
   (is (= (calls some-fn)
          [{:args [1 2] :return :value}
           {:args [3 4] :return :value}])))
+```
+
+## Using with Speclj
+
+If you're using [speclj](https://github.com/slagyr/speclj), the `spy-on` function
+provides a slightly cleaner way to set up spies for the duration of a spec:
+
+```clojure
+(use 'speclj.core)
+(use 'wishful.speclj)
+
+(describe "spying on functions"
+  (spy-on
+    (some-fn :arg1) :value1
+    (other-fn :arg2) :value2)
+    
+  (it "works"
+    (should= (some-fn :arg1) :value1)
+    (should= (some-fn :arg2) :value2))
+    
+    (describe "overriding outer spies"
+      (spy-on
+        (some-fn (any-arg)) :yet-another-value)
+    
+      (it "also works"
+        (should= (some-fn :arg1) :yet-another-value))))
 ```
 
 ## License
