@@ -17,7 +17,7 @@ Contents:
 Add wishful to your project's dependencies:
 
 ```clojure
-  [wishful "0.1.1"]
+  [wishful "0.1.2"]
 ```
 
 ## Using Spies

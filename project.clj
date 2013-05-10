@@ -1,4 +1,4 @@
-(defproject wishful "0.1.1"
+(defproject wishful "0.1.2"
   :description "Simple test spies and stubs for clojure"
   :url "https://github.com/maxbrunsfeld/wishful"
   :license {:name "Eclipse Public License"
