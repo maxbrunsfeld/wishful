@@ -1,9 +1,19 @@
-(ns wishful.redefs
-  (:require [wishful.spy]))
+(declare spy-bindings->redefs group-by-fn-name transform-each-rhs
+         remove-fn-name-from-forms)
 
-(declare group-by-fn-name transform-each-rhs remove-fn-name-from-forms)
+(defmacro with-spies
+  "Temporarily redefines functions while executing the body.
+  The temporary function definitions are specified with a function
+  symbol, an argument list and a return value like this:
 
-(defn spy-bindings->redefs
+  [(fn1 arg1 arg2) value1
+   (fn2 arg3) value2]"
+  [fn-bindings & body]
+  `(with-redefs
+     ~(spy-bindings->redefs fn-bindings)
+     ~(cons 'do body)))
+
+(defn- spy-bindings->redefs
   [spy-bindings]
   (->>
     spy-bindings
@@ -12,7 +22,7 @@
       #(->> %
             remove-fn-name-from-forms
             vec
-            (apply list 'wishful.spy/make-spy)))))
+            (apply list 'wishful.core/make-spy)))))
 
 (defn- group-by-fn-name
   [bindings]
