@@ -47,6 +47,13 @@
       (testing "the later one overrides the earlier one"
         (is (= :later-value (spy :arg))))))
 
+  (testing "it works with falsy return values"
+    (let [spy (make-spy [[(any-arg even?)] nil]
+                        [[(any-arg odd?)] false])]
+
+      (is (= nil (spy 2)))
+      (is (= false (spy 3)))))
+
   (testing "when given an argument list with wildcard parameters"
     (let [spy (make-spy [[(any-arg) :arg2] :matched-any]
                         [[(any-arg even?) :arg2] :matched-even]

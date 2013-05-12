@@ -46,13 +46,14 @@
     return))
 
 (defn- compute-spy-value [spy-specs args]
-  (or (->>
-        spy-specs
-        (map #(apply-spy-spec % args))
-        (filter :matches?)
-        first
-        :value)
-      (invalid-arguments! args)))
+  (if-let
+    [result (->>
+              spy-specs
+              (map #(apply-spy-spec % args))
+              (filter :matches?)
+              first)]
+    (:value result)
+    (invalid-arguments! args)))
 
 (defn- apply-spy-spec
   [spy-spec args]
